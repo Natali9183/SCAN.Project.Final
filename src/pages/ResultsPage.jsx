@@ -76,29 +76,24 @@ export default function ResultsPage() {
     }
 
     let html = markup
-      // XML-заголовок
       .replace(/<!--\?xml[\s\S]*?\?-->/gi, "")
       .replace(/<\?xml[\s\S]*?\?>/gi, "");
 
-    // Если HTML пришёл закодированным: &lt;p&gt; → <p>
     const textarea = document.createElement("textarea");
     textarea.innerHTML = html;
     html = textarea.value;
 
-    // Сохраняем переносы перед удалением тегов
     html = html
       .replace(/<\/p>\s*<p>/gi, "\n\n")
       .replace(/<br\s*\/?>/gi, "\n")
       .replace(/<\/div>\s*<div>/gi, "\n\n")
       .replace(/<\/li>\s*<li>/gi, "\n");
 
-    // Удаляем ВСЕ HTML/XML-теги
     const container = document.createElement("div");
     container.innerHTML = html;
 
     let text = container.textContent || "";
 
-    // Нормализуем пробелы и переносы
     text = text
       .replace(/\r\n/g, "\n")
       .replace(/[ \t]+\n/g, "\n")
@@ -110,7 +105,6 @@ export default function ResultsPage() {
       return "<p>Содержимое публикации отсутствует.</p>";
     }
 
-    // Превращаем переносы в нормальные абзацы
     return text
       .split(/\n\s*\n/)
       .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br />")}</p>`)
